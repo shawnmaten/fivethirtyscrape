@@ -1,4 +1,4 @@
-# Five Thirty Scrape
+# FiveThirtyScrape
 
 Working prototype of a serverless, dynamic site scraper using Zeit Now and Puppeteer.  
 
@@ -18,24 +18,29 @@ You can view the output of a running demo at https://fivethirtyscrape.now.sh. It
 I became interested in web crawlers and site scrapers about a year ago. I was intriqued by the idea to make content programatically accessible for sites that didn't offer APIs, and to then test out the content in different formats (native apps, different site designs, etc). These ideas turned into a rabbit hole of different options, and what I've made here is really the tenth or so incarnation.
 
 The top considerations I ended up pivoting around were:
-- Supporting JS-Heavy and SPA Sites
-- Using Desired Tools but Avoiding Manual Infrastructure
-- Task Queues and Scheduling on Serverless
+- Supporting JS-heavy and SPA sites
+- Using desired tools but avoiding manual infrastructure
+- Task queues and scheduling on serverless
 
 ## Usage, Configuration, & Deployment
 The usage is very simple, scraped articles are returned as a JSON list from the root / endpoint. Configuration is done through the env variables in the docker-compose.yml (local deployment) and now.json (public deployment) files and Zeit Now secrets. You can leave everything as is for local deployment unless you need to change the port bindings. For public deployment to Zeit you need to set a few secrets.
 
 For the browserless service we configure CONNECTION_TIMEOUT, MAX_CONCURRENT_SESSIONS, ENABLE_DEBUGGER, and TOKEN, which are explained in the browserless documentation. To deploy to Zeit you must set a secret value for "browserless-token" to restrict access to it. For the scraper service we configure BROWSERLESS and MONGO to point to the correct browserless and mongodb  instances. To deploy to Zeit you must set a secret value for "browserless-url" of the format "wss://browserless-url?token=some-token" and "mongo-url" of the format "mongodb://user:pass@mongodb-url/some-database".
 
-A scrape of Five Thirty Eight will automatically start when you launch the scraper instance. It will scrape the last week of articles the first time and take a few minutes. Once articles are loaded into the database, subsequent runs will only scrape new articles. Agenda is set to run crawls at 6AM, 12PM, and 6PM CT.
+A scrape of FiveThirtyEight will automatically start when you launch the scraper instance. It will scrape the last week of articles the first time and take a few minutes. Once articles are loaded into the database, subsequent runs will only scrape new articles. Agenda is set to run crawls at 6AM, 12PM, and 6PM CT.
 
 ### To Deploy Locally
+Both services are setup to run inside Docker containers and Docker and Docker Compose are required. If you're unfamiliar with Docker or Compose, or need to install either, you can refer to the documentation [here](https://docs.docker.com/get-started/) and [here](https://docs.docker.com/compose/gettingstarted/).
+
 ```shell
 docker-compose up
+# Browserless debugger will be available at localhost:4000
 # Articles endpiont will be available at localhost:3000
 ```
 
 ### To Deply to Zeit
+This project was setup with [Zeit Now](https://zeit.co) in mind, but it should easily translate to other Docker environments. It will run under the free OSS plan. All that's needed is a (free) account and for the now CLI to be installed. To enable scheduled site scrapes, you will need to scale the scraper instance to always maintain 1 running instance (consuming 1/3 on the OSS plan). The browserless instance will scale to zero in between scrapes.
+
 ```shell
 # Create secret with a reasonable access token for browserless
 now secret add browserless-token some-random-token
@@ -50,6 +55,11 @@ now secret add mongo-url mongodb://user:pass@mongodb-url/some-database
 
 # Deploy the scraper instance
 now deploy --public ./scraper
+
+# For scheduled site scrapes, you must scale the scraper to always maintain 1 instance
+# Use any region you want, but if you don't specify a region or specify all, 1 per region is created
+# Agenda will handle multiple workers, but that's overkill in this case
+now scale scraper-instance-url some-region 1 1
 
 # Optionally you can give your scraper instance an alias
 now alias set scraper-instance-url some-memorable-alias
