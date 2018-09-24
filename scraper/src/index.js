@@ -20,5 +20,5 @@ const { Article } = require('./util/db');
 		agenda.define(processor.name, processor.func);
 	}
 	
-	await agenda.schedule('0 6,12,18 * * *', 'fte crawl list', {}, { timezone: 'America/Chicago' });
+	await agenda.every('0 6,12,18 * * *', 'fte crawl list', {}, { timezone: 'America/Chicago' });
 })();
