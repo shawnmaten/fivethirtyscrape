@@ -1,0 +1,13 @@
+{
+  "name": "browserless",
+  "type": "docker",
+  "features": {
+    "cloud": "v1"
+  },
+  "env": {
+  	"CONNECTION_TIMEOUT": "600000",
+    "MAX_CONCURRENT_SESSIONS": "1",
+    "ENABLE_DEBUGGER": "false",
+    "TOKEN": "@browserless-token"
+  }
+}

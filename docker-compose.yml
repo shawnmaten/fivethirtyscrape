@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:  
+
+  browserless:
+    build: ./browserless
+    environment:
+      - CONNECTION_TIMEOUT=600000
+      - MAX_CONCURRENT_SESSIONS=2
+      - ENABLE_DEBUGGER=true
+    ports:
+      - 4000:3000
+    deploy:
+      resources:
+        limits:
+              cpus: '0.50'
+              memory: 512M
+    networks:
+      - main
+
+  mongo:
+    image: mongo
+    networks:
+      - main
+
+  scraper:
+    build: ./scraper
+    environment:
+      - BROWSERLESS=ws://browserless:3000
+      - MONGO=mongodb://mongo/test
+    ports:
+      - 3000:3000
+    networks:
+      - main
+    depends_on:
+      - browserless
+      - mongo
+
+networks:
+  main:

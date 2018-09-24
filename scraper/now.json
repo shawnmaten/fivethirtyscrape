@@ -1,0 +1,11 @@
+{
+  "name": "scraper",
+  "type": "docker",
+  "features": {
+    "cloud": "v1"
+  },
+  "env": {
+  	"BROWSERLESS": "@browserless-url",
+    "MONGO": "@mongo-url"
+  }
+}
