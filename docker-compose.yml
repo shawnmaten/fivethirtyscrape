@@ -1,6 +1,6 @@
 version: "3.6"
 
-services:  
+services:
 
   browserless:
     build: ./browserless
@@ -25,6 +25,8 @@ services:
 
   scraper:
     build: ./scraper
+    volumes:
+      - ./scraper/src/:/app/src/
     environment:
       - BROWSERLESS=ws://browserless:3000
       - MONGO=mongodb://mongo/test

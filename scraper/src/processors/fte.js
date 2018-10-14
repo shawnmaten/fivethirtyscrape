@@ -2,7 +2,7 @@ const moment = require('moment');
 const browserless = require('../util/browserless');
 const db = require('../util/db');
 const Article = db.Article;
-const agenda = require('../util/agenda');
+const { agenda } = require('../util/agenda');
 
 module.exports = [
   { name: 'fte crawl list', func: crawlList },
@@ -27,7 +27,7 @@ async function crawlList(job, done) {
     console.log(`Loading ${nextUrl}`);
     await page.goto(nextUrl, browserless.defaultPageOpts);
     const data = await page.evaluate(getListData);
-    
+
     const newArticles = data.articles.filter((article) => {
       const articleDate = moment(article.date);
       return articleDate.isAfter(cutoffDate);
@@ -79,9 +79,9 @@ async function scrapeArticle(job, done) {
 
   await page.goto(url, browserless.defaultPageOpts);
   const data = await page.evaluate(getArticleData);
-  
+
   const query = { sourceUrl: data.sourceUrl };
-  const options = { upsert: true } 
+  const options = { upsert: true }
   await Article.findOneAndUpdate(query, data, options);
 
   await page.close();
@@ -95,7 +95,7 @@ async function scrapeArticle(job, done) {
 
 function getArticleData() {
   var data = {};
-  
+
   data['sourceUrl'] = window.location.href;
   data['updatedAt'] = Date.parse(document.querySelector('.datetime.updated').title);
   data['title'] = document.querySelector('.article-title').textContent.trim();
@@ -106,7 +106,7 @@ function getArticleData() {
   } catch(err) {
     data['imageUrl'] = null;
   }
-  
+
   var author = document.querySelector('.author').textContent;
   if (author == 'FiveThirtyEight') {
     data['author'] = null;
@@ -118,7 +118,7 @@ function getArticleData() {
       data['author'] = author;
     }
   }
-  
+
   data['tags'] = Array.from(document.querySelectorAll('.tag')).map((node) => {
     var href = node.href;
     var parts = href.split('/');
