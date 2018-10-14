@@ -8,8 +8,9 @@ WORKDIR /app/
 EXPOSE 3000
 ENTRYPOINT ["dumb-init", "--"]
 
+ARG NODE_ENV=production
 COPY package.json package-lock.json /app/
-RUN npm install --production
+RUN npm install
 COPY src /app/src/
 USER node
 CMD ["node", "src/index.js"]

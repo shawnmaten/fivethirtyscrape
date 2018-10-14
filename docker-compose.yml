@@ -24,7 +24,10 @@ services:
       - main
 
   scraper:
-    build: ./scraper
+    build:
+      context: ./scraper
+      args:
+        - NODE_ENV=dev
     volumes:
       - ./scraper/src/:/app/src/
     environment:
