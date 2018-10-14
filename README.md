@@ -65,6 +65,17 @@ now scale scraper-instance-url some-region 1 1
 now alias set scraper-instance-url some-memorable-alias
 ```
 
+### Tests
+Using the Jest testing framework. All tests are under `scraper/src/__tests__`. Currently there are just a few unit tests for the health check endpoint.
+
+To run tests:
+```sh
+docker-compose run --rm scraper npm run test
+```
+
+### Monitoring
+There's a /health endpoint that checks the time of the last crawl and last article scraped. UptimeRobot is setup to monitor using this endpoint.
+
 ## Improvements
 - It's a rough prototype, so code quality, testing, error handling
 - Efficiency and scaling with headless chrome
