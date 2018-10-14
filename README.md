@@ -1,5 +1,7 @@
 # FiveThirtyScrape
 
+![30 Day Uptime][uptime-badge]
+
 Working prototype of a serverless, dynamic site scraper using Zeit Now and Puppeteer.  
 
 The goal of this project was to demonstrate a scraper that was sufficiently modern and met certain criteria. It needed to handle JS-heavy and SPA sites, be deployable to a PAAS or serverless environment, have a task queue and scheduling component, and scale down to free or nearly free. As an example, the news site FiveThirtyEight is scraped and turned it into a simple API, but the purpose of the project is to demonstrate the tools and services.
@@ -83,3 +85,5 @@ There's a /health endpoint that checks the time of the last crawl and last artic
 	- We could create multiple pages per single browser instance (but this runs into resource constraints)
 	- We could use multiple browserless instances (but how to handle waiting and auto-scaling)
 - Adapting to changes to Zeit platform, this uses v1 but v2 is in beta
+
+[uptime-badge]: https://img.shields.io/uptimerobot/ratio/m781150358-8bd64c5271becf7c7573e52a.svg
