@@ -83,3 +83,5 @@ There's a /health endpoint that checks the time of the last crawl and last artic
 	- We could create multiple pages per single browser instance (but this runs into resource constraints)
 	- We could use multiple browserless instances (but how to handle waiting and auto-scaling)
 - Adapting to changes to Zeit platform, this uses v1 but v2 is in beta
+- It's cumbersome to update secrets and environment variables
+- When testing new versions of the scraper, we're using the production database
