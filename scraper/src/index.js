@@ -61,7 +61,7 @@ function checkHealth(job, article) {
 	});
 
 	agenda.on('fail', (err, job) => {
-		console.error(`job "${job.attrs.name}" failed`);
+		console.error(`job "${job.attrs.name}" failed: ${err.message}`);
 	});
 
 	await agenda.start();
